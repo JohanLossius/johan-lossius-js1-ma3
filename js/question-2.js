@@ -30,19 +30,20 @@ const apiUrl = `https://api.rawg.io/api/games?dates=2019-01-01,2019-12-31&orderi
 const htmlCont = document.querySelector(".home");
 
 async function callApiRawg() {
-    const response = await fetch(apiUrl);
-    const results = await response.json();
-    console.log(results);
-    let html = "";
-    for (let i = 0; i < results.length; i++) {
-        html += `<div>${results[i].name}</div><div>${results[i].rating}</div><div>${results[i].length}</div>`;
-        if (i === 8) {
-            break;
+    try { 
+        const response = await fetch(apiUrl);
+        const results = await response.json();
+        const facts = results.results;
+        htmlCont.innerHTML = "";
+        for (let i = 0; i < facts.length; i++) {
+            htmlCont.innerHTML += `<ul>Nr. ${i + 1}</ul><li>Name: ${facts[i].name}</li><li>Rating: ${facts[i].rating}</li><li>Nr. of tags: ${facts[i].tags.length}</li></ul>`;
+            if (i === 7) {
+                break;
+            }
         }
+    } catch (error) {
+        htmlCont.innerHTML = `An error occurred while calling the API.`
     }
-    return html;
 };
 
-const finalHtml = callApiRawg();
-htmlCont.innerHTML = finalHtml;
-console.log(finalHtml);
+callApiRawg();
